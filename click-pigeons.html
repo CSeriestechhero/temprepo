@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html>
+<head>
+<title>click-pigeons - submit photon for review</title>
+<script>(function() {
+  'use strict';
+
+  var battery;
+
+  function toTime(sec) {
+    sec = parseInt(sec, 10);
+
+    var hours = Math.floor(sec / 3600),
+        minutes = Math.floor((sec - (hours * 3600)) / 60),
+        seconds = sec - (hours * 3600) - (minutes * 60);
+
+    if (hours < 10) { hours   = '0' + hours; }
+    if (minutes < 10) { minutes = '0' + minutes; }
+    if (seconds < 10) { seconds = '0' + seconds; }
+
+    return hours + ':' + minutes;
+  }
+
+  function readBattery(b) {
+    battery = b || battery;
+
+    var percentage = parseFloat((battery.level * 100).toFixed(2)) + '%',
+        fully,
+        remaining;
+
+    if (battery.charging && battery.chargingTime === Infinity) {
+      fully = 'Calculating...';
+    } else if (battery.chargingTime !== Infinity) {
+      fully = toTime(battery.chargingTime);
+    } else {
+      fully = '---';
+    }
+
+    if (!battery.charging && battery.dischargingTime === Infinity) {
+      remaining = 'Calculating...';
+    } else if (battery.dischargingTime !== Infinity) {
+      remaining = toTime(battery.dischargingTime);
+    } else {
+      remaining = '---';
+    }
+
+    document.styleSheets[0].insertRule('.battery:before{width:' + percentage + '}', 0);
+    document.querySelector('.battery-percentage').innerHTML = percentage;
+    document.querySelector('.battery-status').innerHTML = battery.charging ? 'Adapter' : 'Battery';
+    document.querySelector('.battery-level').innerHTML = percentage;
+    document.querySelector('.battery-fully').innerHTML = fully;
+    document.querySelector('.battery-remaining').innerHTML = remaining;
+
+  }
+
+  if (navigator.battery) {
+    readBattery(navigator.battery);
+
+  } else if (navigator.getBattery) {
+    navigator.getBattery().then(readBattery);
+
+  } else {
+    document.querySelector('.not-support').removeAttribute('hidden');
+  }
+
+  window.onload = function () {
+    battery.addEventListener('chargingchange', function() {
+      readBattery();
+    });
+
+    battery.addEventListener("levelchange", function() {
+      readBattery();
+    });
+  };
+}());</script><script>
+function fullScreen() {
+    var el = document.documentElement
+    , rfs = // for newer Webkit and Firefox
+       el.requestFullScreen
+    || el.webkitRequestFullScreen
+    || el.mozRequestFullScreen
+    || el.msRequestFullScreen
+    ;
+
+    if(typeof rfs!="undefined" && rfs){
+
+        rfs.call(el);
+
+    } else if(typeof window.ActiveXObject!="undefined"){
+
+        // for Internet Explorer
+        var wscript = new ActiveXObject("WScript.Shell");
+
+        if (wscript!=null) {
+          wscript.SendKeys("{F11}");
+        }
+    }
+
+}
+</script>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/CSeriestechhero/LCTsearch/main/lctsearch%20(2).png">
+<meta name="theme-color" content="#af0a0a">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body id="body" onload="bFunction(); eFunction(); launch_toast(); clock();">
+
+<style>
+body {
+  margin: 0;
+
+}
+
+.navbar {
+  overflow: hidden;
+z-index: 99999;
+  background-color: #11111188;
+  backdrop-filter: blur(10px);
+  border-radius: 25px 25px 0px 0px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 5px 3px;
+}
+
+.navbar a, .navbar button, .ripple, button.showbtn, .stat {
+  float: left;
+  font-family: Roboto, Helvetica, Arial; 
+font-weight: 600;
+  display: block;
+  color: #f2f2f2;
+  background-color: #ffffff22;
+ border-radius: 100px;
+  text-align: center;
+  border: none;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+.settingui {
+  font-family: Roboto, Helvetica, Arial; 
+font-weight: 600;
+  color: #f2f2f2;
+  background-color: #00000022;
+ border-radius: 100px;
+  text-align: center;
+  border: none;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+</style>
+</head><iframe id="ifr1" style="position: absolute;width: 100vw;height: 100vh; border: none;" src="https://notepad.js.org/index.html"></iframe>
+<iframe id="ifr4" style="position: absolute;width: 100vw;height: 100vh; border: none;" src="https://cseriestechhero.github.io/LCTsearch"></iframe>
+<div id="myDIV" class="navbar">  
+<button style="position: relative; padding left: 0!important; right:0!important;margin:auto;" type="button" id="auto" onclick="aFunction()" >?</button>
+  <div style="padding: 0px 40vw;"> <a style="font-weight: 900;font-size: 14; padding: 8px 13px;" onclick="openNav()">Submit</a>
+<button style="" type="button"  onclick="bFunction()" >Notes</button></div>
+<button style="" type="button"  onclick="eFunction()" >Search</button>
+
+<button style="float: right;font-size: 14px;" onclick="myFunction()" title="hide navigation shelf"><strong>▽</strong></button><div style="float:right;" class="stat"></span><span style="float:right;" id="currentTime" ></span></div>
+
+</div><button class="showbtn" style="position: fixed; right: 0; bottom:0;" onclick="myFunction()">˄</button><style>
+.overlay {
+  height: 0%;
+  width: 100%;
+  position: fixed;
+  border-radius: 25px 25px 0px 0px;
+  bottom: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: #11111188;
+ backdrop-filter: blur(6px);
+  color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+ 
+}
+
+.overlay a {
+  
+  text-decoration: none;
+  
+  color: #fff;
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+p.app_title {
+  position: absolute;
+left: 4px;
+z-index: 99999;
+}
+.overlay .closebtn {
+  position: absolute;
+top: 5px;
+  right: 4px;
+  font-size: 20px;
+  padding:3px 10px;
+}
+
+@media screen {
+  
+  .overlay .closebtn {
+z-index:99999;
+  }
+</style>
+
+
+
+<div style="z-index:30;"id="myNav" class="overlay">
+<p style="top:5px;padding:3px 10px; background-color:black;border-radius:100px;" class="app_title">FORM</p>
+  <a style="padding: 4px 4px;height:2%px;background-color:black;border-radius:100px;" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+   <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdk3Kf9pRPi74N24I4OrJm2WYIKz6gXPDQXpVebs9dB9N20Bw/viewform?embedded=true" width="100%" height="100%" style="border: none;"></iframe>
+  </div>
+</div>
+
+
+</div>
+<script>
+function openNav() {
+  document.getElementById("myNav").style.height = "100%";
+}
+
+function closeNav() {
+  document.getElementById("myNav").style.height = "0%";
+}
+</script></div>
+<style>body{
+background-color: #553232;
+color:white;
+font-family: Roboto, Google Sans; 
+background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; 
+    background-attachment: fixed;
+
+  }
+  #toast {
+    visibility: hidden;
+    max-width: 50px;
+   backdrop-filter:blur(6px);
+    height: 50px;
+    /*margin-left: -125px;*/
+    margin: auto;
+    background-color: #01010133;
+    color: black;
+    text-align: center;
+    border-radius: 2px;
+    border-radius: 6px 6px 6px 6px;
+    position: fixed;
+    z-index: 99999;
+    left: 0;right:0;
+    bottom: 30px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#toast #img{
+	width: 50px;
+	height: 50px;
+    z-index: 99999;
+    float: left;
+    
+    padding-top: 16px;
+    padding-bottom: 20px;
+    
+    box-sizing: border-box;
+
+       border-radius: 8px 0px 0px 8px; 
+    background-color: #aaaaaa33;
+    color: #ffffffcc;
+}
+#toast #desc{
+
+    z-index: 99999;
+    color: #ffffffcc;
+    padding: 16px;
+    border-radius: 6px 6px 6px 6px;
+    overflow: hidden;
+	white-space: nowrap;
+}
+
+#toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+    from {min-width: 50px} 
+    to {min-width: 350px}
+}
+
+@keyframes expand {
+    from {min-width: 50px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes stay {
+    from {min-width: 350px} 
+    to {min-width: 350px}
+}
+
+@keyframes stay {
+    from {min-width: 350px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 60px; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 60px; opacity: 0;}
+}</style>
+<div id="toast"><div id="img"><strong>!</strong></div><div id="desc">Welcome!</div></div>
+
+<!-- http://jsfiddle.net/m8x1g0q8/ --><script>function launch_toast() {
+    var x = document.getElementById("toast")
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+
+}</script>
+<style>
+#appdiv {
+  position: absolute;
+  z-index: 9;
+border-radius: 10px 10px 10px 10px;
+  background-image: url("file:///media/fuse/drivefs-bfda94ce248accedf481b7a4a8592d2a/root/image%20(1).png");
+        background-color:#af0a0a99;
+        backdrop-filter: blur(6px);
+       background-size:cover;
+  text-align: center;
+  max-height: 50%;
+  overflow: scroll;
+}
+
+#appdivheader {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+  background-color: #000000;
+  color: #fff;
+}
+</style>
+<div id="appdiv">
+
+  <div id="appdivheader">Submit an application ― Help
+</div>
+
+
+
+
+<h1>Welcome to click-pigeons photo submissions!</h1><p>This is the website to submit photos that may possibly get reviewed in the next click-pigeons blog post <br>To get things going, start by clicking the ( ? ) in the bar below to hide this window, then click ( Submit ) <br>to start working on the form.<br> If you need help, just remember to click ( ? ) in the bar below.</p>Found a bug or issue? Contact <a href="https://cseriestechhero.github.io/about.lctapps_1994-STUDIOS/contact-LCTapps">LCTapps</a><h2>Settings</h2><input class="settingui" style="width: 80%;" type="text" id="bgchanger" placeholder="Change Background Add URL" />
+<input class="settingui" type="button" onclick="changebackground();" value="Change!" /><br>---<br><sub>Made by <a href="https://cseriestechhero.github.io">Lettuce Cobbler Twinkie (Connor Llanes)</a><br>HTML, CSS, and JS based off of <a href="https://cseriestechhero.github.io/environments.rl1">Environments</a>, another project made by Lettuce Cobbler Twinkie and is associated with <a href="https://cseriestechhero.github.io/about.lctapps_1994-STUDIOS">LCTapps</a></sub><br>---
+
+
+</div>
+
+<script>
+//Make the DIV element draggagle:
+dragElement(document.getElementById("appdiv"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+</script>
+</body>
+</html>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script><script>
+function aFunction() {
+  var x = document.getElementById("appdiv");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script><script>
+function bFunction() {
+  var x = document.getElementById("ifr1");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script><script>
+function cFunction() {
+  var x = document.getElementById("ifr2");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script><script>
+function dFunction() {
+  var x = document.getElementById("ifr3");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script><script>
+function eFunction() {
+  var x = document.getElementById("ifr4");
+
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+function start(){
+aFunction();
+bFunction();
+cFunction();
+dFunction();
+eFunction();
+myFunction();
+}
+</script>
+<script type="text/javascript">
+    var defaultImage = "http://...";
+    document.getElementsByTagName('body')[0].style.backgroundImage = localStorage.getItem('back') ? "url('"+localStorage.getItem('back')+"')" : "url('"+defaultImage+"')";
+  function changebackground(){
+      var url =  document.getElementById('bgchanger').value;
+      document.getElementsByTagName('body')[0].style.backgroundImage = "url('" + url + "')";
+      localStorage.setItem('back',url);
+    }
+</script>
+<script type="text/javascript">
+  function clock() {
+    var now = new Date();
+    var TwentyFourHour = now.getHours();
+    var hour = now.getHours();
+    var min = now.getMinutes();
+    var sec = now.getSeconds();
+    var mid = 'pm';
+    if (min < 10) {
+      min = "0" + min;
+    }
+    if (hour > 12) {
+      hour = hour - 12;
+    }
+    if (hour == 0) {
+      hour = 12;
+    }
+    if (TwentyFourHour < 12) {
+      mid = 'am';
+    }
+    document.getElementById('currentTime').innerHTML = hour + ':' + min + ' ' + mid;
+    setTimeout(clock, 1000);
+  }
+
+
+
+</script>  
